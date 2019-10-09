@@ -24,6 +24,10 @@ func Walk(t *tree.Tree, ch chan int) {
 // t1 and t2 contain the same values.
 func Same(t1, t2 *tree.Tree) bool {
 	ch1, ch2 := make(chan int), make(chan int)
+	defer func(ch1, ch2 chan int){
+		close(ch2)
+		close(ch1)
+	}(ch1, ch2)
 	go Walk(t1, ch1)
 	go Walk(t2, ch2)
 	for i :=0 ; i < 10; i++{
